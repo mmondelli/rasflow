@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cat $1 | perl ${SWIFT_LOSS}/vcfEffOnePerLine.pl | java -jar ${SWIFT_LOSS}/SnpSift.jar extractFields -e "." - CHROM POS REF ALT "VARTYPE" DP MQ AF "EFF[*].EFFECT"  "EFF[*].IMPACT" "EFF[*].CODON" "EFF[*].AA" "EFF[*].GENE" "EFF[*].TRID" "(FILTER = 'PASS')" > $2

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "Removing files"
+rm -rf run* swiftwork
+rm *.fastq.* 
+rm *dict
+rm *vcf
+rm *fa
+rm *metrics
+rm *grp
+rm *~
+rm -rf *GATK
+rm *kml *nodup* *log

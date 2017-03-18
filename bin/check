@@ -1,0 +1,11 @@
+#!/bin/bash
+
+file=$1
+ref=$2
+
+if [ -f "$file" ]; then
+    echo "File exists"
+else 
+    echo "File does not exist"
+    bowtie2-build -q $ref $ref
+fi 

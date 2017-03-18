@@ -1,0 +1,5 @@
+#!/bin/bash
+
+python ${SWIFT_LOSS}/snp_eff_index_GATK.py -l $1 -r $2 -g $3 -s $4
+
+#java -jar snpEff.jar build -gtf22 %s
