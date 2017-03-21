@@ -1,0 +1,40 @@
+#!/bin/bash
+
+FILE=$1
+NSEQ=$2
+
+qtd_linhas=$(wc -l $FILE | awk '{print $1}')
+qtd_seq=$(awk '/@/' $FILE | wc -l)
+#Número sequência e linha onde ela inicia
+seq_linha=$(grep -n ^ $FILE | awk '/@/' | grep -n ^ | cut -d':' -f1,2)
+#Linha de cada seq.
+seq_inicio=($(grep -n ^ $FILE | awk '/@/' | grep -n ^ | cut -d':' -f2))
+
+#grep -n ^ ref.fastq | awk '/@/' | sed -n 1,26p ref.fastq | awk '/@/{filename=NR".fastq"}; {print >filename}; {print filename}'
+
+#echo -e "Sequence number and line \n" $seq_linha
+#echo -e "Number of sequences \n" $qtd_seq
+#echo -e "Number of lines \n" $qtd_linhas
+#echo -e "Line number of each sequence \n" ${seq_inicio[@]}
+#echo $((${seq_inicio[8]}-1))
+
+for (( c=0; c<=$qtd_seq; c=c+$NSEQ ))
+do  
+   i=$((${seq_inicio[($c)]}))
+   f=$((${seq_inicio[($c+$NSEQ)]}-1))
+   
+   if [ "$f" -ne "-1" ] 
+   then
+ #  	echo $c "---" $i "-" $f
+	p=$i','$f'p' #intervalo para o sed
+	grep -n ^ $FILE | awk '/@/' | sed -n $p $FILE | awk '/@/{filename="splitted"'$c+$NSEQ'".fq"}; {print >filename};'
+   else	
+#	echo $c "---" $i "-" $qtd_linhas
+	p=$i','$qtd_linhas'p' #intervalo para o sed
+	grep -n ^ $FILE | awk '/@/' | sed -n $p $FILE | awk '/@/{filename="splitted"'$c+$NSEQ'".fq"}; {print >filename};'
+	echo "Finished!"
+	c=$qtd_seq
+   fi
+done
+
+

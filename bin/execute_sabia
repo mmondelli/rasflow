@@ -1,0 +1,28 @@
+#!/bin/bash
+
+f="1_001.fastq"
+r="2_001.fastq"
+
+lib=("LNCC_S4_all_R")
+op=("3")
+
+#for i in $(seq 4)
+#do
+for i in "${op[@]}"; do
+	for l in "${lib[@]}"; do
+
+		echo "EXECUTANDO --- " $l$f $l$r $i $l$f\_op$i.out
+		python sabia_SNP_caller.py -r hg38.fasta -1 $l$f -2 $l$r -g genes.gff -c 40 -p 2 -s human -t $i 1> $l$f_op$i.out
+		dir=$(ls -td */ | head -1)
+		echo "DIRETORIO --- " $dir	
+		mv $l$f_op$i.out $dir
+		mv $dir op$i\_$dir
+		echo "MOVING --- " op$i\_$dir
+		mv op$i\_$dir executions_sabia/
+		
+		rm $l$f.*
+		rm re*
+		rm *fai *dict
+	done
+done
+

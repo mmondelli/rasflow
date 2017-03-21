@@ -1,0 +1,48 @@
+#!/bin/bash
+
+r=${1}
+s1=${2}
+s2=${3}
+g=${4}
+c=${5}
+t=${6}
+db=${7}
+
+if [ $# != 7 ]; then
+	echo "***ERROR*** Use: $0 <ref> <1> <2> <gtf> <cores> <option> <database>"
+	exit -1
+fi
+
+source ../env_loss
+
+#Executa o script
+echo -e "Execução $i ------------------------------------------ \n"
+{ time swift loss.swift -1=$s1 -2=$s2 -ref=$r -gtf=$g -op=$t -p=$c; } 2>>time.txt
+runid=$(ls -t | grep run | head -1 ) #| cut -c1-6)
+echo '- Run: ' $runid
+
+#Importa proveniência do último run gerado
+echo -e "Importação daroveniencia --------------------------- \n"
+swiftlog -import-provenance $runid
+
+#Importa log
+echo -e "Importacao do log ------------------------------------ \n"
+SQLITE_CMD="sqlite3 $db"
+runid_db=$(echo "select script_run_id from script_run order by start_time desc limit 1;" | $SQLITE_CMD)
+echo "- Run id: " $runid_db 
+log_extractor $db $runid_db >> log_extractor.out
+
+#Importa vcf
+echo -e "Importacao do arquivo vcf e gff ---------------------- \n"
+name=$(echo $2 | cut -f 1 -d '.')
+dir=$(ls -td */ | grep $name | head -1)
+echo "- Diretorio: " $dir
+cd $dir
+
+final=$(ls *FINAL.vcf)
+echo "- Final vcf: " $final
+
+gff=$(ls genes.gff)
+echo "- GFF: " $gff
+
+vcf_extractor $db $final $gff >> ../vcf_extractor.out

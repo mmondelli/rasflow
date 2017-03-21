@@ -1,0 +1,23 @@
+#!/bin/bash
+
+db=$1
+final=$2
+
+SQLITE_CMD="sqlite3 $db"
+echo $SQLITE_CMD
+
+#Seleciona o file_id do arquivo vcf da última execução do workflow
+file_id=$(echo "select o.file_id from staged_out o inner join app_exec a on a.app_exec_id = o.app_exec_id where a.app_name like '%Extract%' and a.script_run_id in (select script_run_id from script_run order by duration desc limit 1);" | $SQLITE_CMD)
+echo $file_id
+echo $final
+
+echo "Creating temp table and importing data"
+echo -e "create table temp(chrom, pos, ref, alt, vartype, dp, mq, af, effect, impact, codon, aa, gene, trid, filter);\n.mode csv \n.separator '\\\t' \n.import $final temp" | $SQLITE_CMD 
+#echo ".mode csv .separator \t .import $final temp" | $SQLITE_CMD
+echo "Inserting into vcf table"
+echo "insert into vcf select '$file_id', * from temp;" | $SQLITE_CMD
+echo "Drop temp table"
+echo "drop table temp;" | $SQLITE_CMD
+
+
+#LNCC_S1_all_R1_001.fastq_FINAL.vcf

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+ref=$1
+libF=$2
+libR=$3
+sam=$4
+log=$5
+t=$6
+
+#bowtie2-align -p $t -D 20 -R 3 -N 1 -L 20 -i S,1,0.5 $ref $lib -S $sam 2> $log
+
+bowtie2-align $ref -1 $libF -2 $libR -S $sam -p $t -D 20 -R 3 -N 1 -L 20 -i S,1,0.5 2> $log

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+in=$1
+out=$2
+metrics=$3
+
+java -jar ${SWIFT_LOSS}/MarkDuplicates.jar INPUT=$in OUTPUT=$out METRICS_FILE=$metrics ASSUME_SORTED=true

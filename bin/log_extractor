@@ -1,0 +1,66 @@
+#!/bin/bash
+
+db=$1
+runid=$2
+
+if [ $# != 2 ]; then
+	echo "***ERROR*** Use: $0 <database> <run_id>"
+	exit -1
+fi
+
+SQLITE_CMD="sqlite3 $db"
+
+for i in $(ls *.log)
+do
+  echo $i
+
+  #Remove linha = '----'	
+  sed -i.bak '/----/d' $i
+
+  id=$(echo "select f.file_id from file f inner join staged_out o on o.file_id = f.file_id inner join app_exec a on a.app_exec_id = o.app_exec_id where f.name like '$i' and a.script_run_id like '%$runid%';" | $SQLITE_CMD)
+  while read line
+  do
+	l=$(echo $line)
+	
+	value=$(echo $line | awk '{print $1}')
+	key=$(echo $line | awk '{print $2}')  
+        if [[ "$key" != "("* ]]; then
+		key=$(echo $line | awk '{$1="";print}' | cut -f1 -d';')
+	     	# echo "----" $token2
+	else
+		key=$(echo $line | awk '{$1=$2="";print}' | cut -f1 -d';' | sed -e 's/^[ \t]*//')
+	fi
+	
+	if [ "$value" == "Warning:" ]; then
+  		echo "INSERT INTO file_annot_text VALUES ('$id', '$value', '$key');" | $SQLITE_CMD 
+	else
+		echo "INSERT INTO file_annot_numeric VALUES ('$id', '$key', '$value');" | $SQLITE_CMD 
+	fi
+  done < $i
+done
+
+rm *bak
+
+for j in $(ls *.fastq)
+do
+  echo $j
+  id=$(echo "select f.file_id from file f natural join staged_in s where f.name like '$j' and s.app_exec_id like '%$runid%';" | $SQLITE_CMD) 
+  echo $id
+  #total_fastq=$(awk '/@/' $j | wc -l)
+  total_fastq=$(wc -l)/4 
+  echo "INSERT INTO file_annot_numeric VALUES ('$id', 'number of sequences', '$total_fastq');" | $SQLITE_CMD 
+done
+
+for k in $(ls *.bigger30.fq)
+do
+  echo $k
+  id=$(echo "select f.file_id from file f natural join staged_out s where f.name like '$k' and s.app_exec_id like '%$runid%';" | $SQLITE_CMD) 
+  echo $id
+  #total_b30=$(awk '/@/' $k | wc -l) 
+  total_b30=$(wc -l)/4
+  echo "INSERT INTO file_annot_numeric VALUES ('$id', 'filtered sequences (>=30)', '$total_b30');" | $SQLITE_CMD 
+done
+
+#cat LNCC_S2_all_R1_001.fastq_hg38_genome_sm_ed.fasta.log | cut -f1 -d';'
+#cat LNCC_S2_all_R1_001.fastq_hg38_genome_sm_ed.fasta.log | awk '{$1="";print}' | cut -f1 -d';'
+

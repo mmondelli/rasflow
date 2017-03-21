@@ -1,0 +1,16 @@
+#!/bin/bash
+
+dir="$1"
+vcf="$2"
+html="$3"
+out="$4"
+op="$5"
+#config=$6
+
+echo ${dir}
+echo ${vcf}
+echo $html
+echo $out
+echo $op
+
+java -jar -Xmx2g ${SWIFT_LOSS}/snpEff.jar eff $1 -c $6 $2 -$5 -no-downstream -no-upstream -s $3 > $4

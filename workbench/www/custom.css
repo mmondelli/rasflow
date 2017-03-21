@@ -1,0 +1,58 @@
+.main-header .logo {
+  font-family: 'Lato', sans-serif; 
+  font-size: 30px; 
+  font-weight: 300; 
+  line-height: 58px;
+}
+
+.skin-blue .main-header .logo {
+    background-color: #00293c;
+}
+
+/* logo when hovered */
+.skin-blue .main-header .logo:hover {
+    background-color: #00293c;
+}
+
+/* navbar (rest of the header) */
+.skin-blue .main-header .navbar {
+    background-color: #00293c;
+}        
+
+/* main sidebar */
+.skin-blue .main-sidebar {
+    background-color: #00293c;
+}
+
+/* active selected tab in the sidebarmenu */
+.skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
+      background-color: #af1c1c;
+      border-left-color: #f0eff0;
+}
+
+/* other links in the sidebarmenu when hovered */
+ .skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
+      background-color: #1e656d;
+      border-left-color: #f0eff0;
+}
+
+/* toggle button when hovered  */    
+ .skin-blue .main-header .navbar .sidebar-toggle:hover{
+      background-color: #1e656d;
+}
+
+/* top box color */
+.box.box-primary {
+    border-top-color: #1e656d;
+}
+
+/* active top tab panel */
+.nav-tabs-custom>.nav-tabs>li.active {
+    border-top-color: #1e656d;
+}
+
+.skin-blue .sidebar-menu>li>.treeview-menu {
+    margin: 0 1px;
+    background: #00293c;
+}
+

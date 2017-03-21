@@ -1,0 +1,13 @@
+#!/bin/bash
+
+
+dir=$1
+op=$2
+conf=$3
+#spec=$3
+
+#echo $dir".genome: " $spec >> $config
+
+java -jar -Xmx4g ${SWIFT_LOSS}/snpEff.jar build -$1 -c $2 $3 
+
+
