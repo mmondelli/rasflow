@@ -52,7 +52,6 @@ file dict <single_file_mapper;file=strcat(strcut(filename(ref), "([^/ ]*).fasta"
 fai = faidx(ref);
 dict = createDict(ref);
 
-
 if (length(bt2) > 0)
 {
 	tracef("%s\n", "Indexed.");
