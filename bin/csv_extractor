@@ -1,0 +1,30 @@
+#!/bin/bash
+
+db=$1
+runid=$2
+csv=$3
+
+if [ $# != 3 ]; then
+	echo "***ERROR*** Use: $0 <database> <run_id> <csv>"
+	exit -1
+fi
+
+SQLITE_CMD="sqlite3 $db"
+
+#select script_run_id from script_run_argument where arg='input';
+
+#awk -F "\"*,\"*" 'NR==2{print $1}' input.csv
+
+for i in $(ls *.csv)
+do
+	while read line
+	  do
+		l=$(echo $line)
+		#echo $l
+		lib_f=$(echo $line | awk -F "\"*,\"*" '{print $1}')
+		lib_r=$(echo $line | awk -F "\"*,\"*" '{print $2}')  
+	       
+	  	echo "INSERT INTO input VALUES ('$runid', '$lib_f', '$lib_r');" #| $SQLITE_CMD 
+
+	done < $i
+done
