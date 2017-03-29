@@ -2,19 +2,19 @@
 
 db=$1
 final=$2
-gff=$3
 
 SQLITE_CMD="sqlite3 $db"
-echo $SQLITE_CMD
 
 #Seleciona o file_id do arquivo vcf da última execução do workflow
-vcf_id=$(echo "select o.file_id from staged_out o inner join app_exec a on a.app_exec_id = o.app_exec_id where a.app_name like '%Extract%' and a.script_run_id in (select script_run_id from script_run order by start_time desc limit 1);" | $SQLITE_CMD)
+#vcf_id=$(echo "select o.file_id from staged_out o inner join app_exec a on a.app_exec_id = o.app_exec_id where a.app_name like '%Extract%' and a.script_run_id in (select script_run_id from script_run order by start_time desc limit 1);" | $SQLITE_CMD)
+
+vcf_id=$(echo "select file_id from file where name like '%$final%';" | $SQLITE_CMD)
 echo "# VCF ID: " $vcf_id
 
 #Seleciona o file_id do arquivo gff da última execução do workflow
-gff_id=$(echo "select o.file_id from staged_out o inner join app_exec a on a.app_exec_id = o.app_exec_id where o.file_id like '%genes%' and a.script_run_id in (select script_run_id from script_run order by start_time desc limit 1);" | $SQLITE_CMD)
-echo "# GFF ID: " $gff_id
-echo $final
+#gff_id=$(echo "select o.file_id from staged_out o inner join app_exec a on a.app_exec_id = o.app_exec_id where o.file_id like '%genes%' and a.script_run_id in (select script_run_id from script_run order by start_time desc limit 1);" | $SQLITE_CMD)
+#echo "# GFF ID: " $gff_id
+#echo $final
 
 echo "# Creating temp table and importing VCF data"
 echo -e "create table temp(chrom, pos, ref, alt, vartype, dp, mq, af, effect, impact, codon, aa, gene, trid, filter);\n.mode csv \n.separator \\\t \n.import $final temp" | $SQLITE_CMD 
@@ -27,19 +27,19 @@ echo "# Drop temp table"
 echo "drop table temp;" | $SQLITE_CMD
 
 #GFF
-grep 'ID=' $gff | grep 'Name=' > id_name.gff
-python $SWIFT_LOSS/gtf2csv/gtf_to_csv.py -i id_name.gff -o genes.csv
+#grep 'ID=' $gff | grep 'Name=' > id_name.gff
+#python $SWIFT_LOSS/gtf2csv/gtf_to_csv.py -i id_name.gff -o genes.csv
 
 #sqlite3 ../../aperriada/swift_provenance_all.db "create table gff(ID,Name,Parent,biotype,ccdsid,description,end,feature,frame,gene_id,havana_gene,havana_transcript,havana_version,logic_name,score,seqname,source,start,strand,tag,transcript_id,transcript_support_level,version);"
 
-echo "# Creating temp table and importing GFF data" 
-echo -e "create table temp(id,name,parent,biotype,ccdsid,description,end,feature,frame,gene_id,havana_gene,havana_transcript,havana_version,logic_name,score,seqname,source,start,strand,tag,transcript_id,transcript_support_level,version); \n.mode csv \n.separator ',' \n.header off \n.import genes.csv temp" | $SQLITE_CMD
+#echo "# Creating temp table and importing GFF data" 
+#echo -e "create table temp(id,name,parent,biotype,ccdsid,description,end,feature,frame,gene_id,havana_gene,havana_transcript,havana_version,logic_name,score,seqname,source,start,strand,tag,transcript_id,transcript_support_level,version); \n.mode csv \n.separator ',' \n.header off \n.import genes.csv temp" | $SQLITE_CMD
 
-echo "# Inserting into gff table"
-echo "insert into gff select '$gff_id', * from temp;" | $SQLITE_CMD
+#echo "# Inserting into gff table"
+#echo "insert into gff select '$gff_id', * from temp;" | $SQLITE_CMD
 
-echo "# Drop temp table" 
-echo "drop table temp;" | $SQLITE_CMD
+#echo "# Drop temp table" 
+#echo "drop table temp;" | $SQLITE_CMD
 
 
 

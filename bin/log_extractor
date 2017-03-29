@@ -17,7 +17,10 @@ do
   #Remove linha = '----'	
   sed -i.bak '/----/d' $i
 
-  id=$(echo "select f.file_id from file f inner join staged_out o on o.file_id = f.file_id inner join app_exec a on a.app_exec_id = o.app_exec_id where f.name like '$i' and a.script_run_id like '%$runid%';" | $SQLITE_CMD)
+  id=$($SQLITE_CMD "select f.file_id from file f inner join staged_out o on o.file_id = f.file_id inner join app_exec a on a.app_exec_id = o.app_exec_id where f.name like '$i' and a.script_run_id like '%$runid%';")
+
+  echo $id "-----"
+
   while read line
   do
 	l=$(echo $line)
