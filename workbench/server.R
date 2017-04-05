@@ -25,6 +25,15 @@
     updateSelectInput(session, inputId = "scriptId", choices = ids())
   })#fim observe
   
+  observe({
+    pacients <- reactive({
+      dbGetQuery(con, paste("select lib_forward from input where script_run_id = '",
+                            input$scriptId,"'", sep=""))
+    }) #fim reactive
+    
+    updateSelectInput(session, inputId = "inputPacient", choices = pacients())
+  })#fim observe
+  
   #Data
   observeEvent(input$updateButton, {
     v$data <- dbGetQuery(con, paste("select  
@@ -95,7 +104,8 @@
                                      group by a.app_exec_id order by start;",sep=""))
     
     domain$data <- dbGetQuery(con, paste("select * from vcf_gff
-                                          where script_run_id = '",input$scriptId,"';",sep=""))
+                                          where script_run_id = '",input$scriptId,"'
+                                          and file_id like '%",input$inputPacient ,"%';",sep=""))
     
   })
   
@@ -124,7 +134,7 @@
   })
   
   output$tableDomainVcf <- renderDataTable({
-    #print(data.frame(cmd$data))
+    print(data.frame(cmd$data))
     DT::datatable(data.frame(domain$data[,1:17]), 
                   options = list(pageLength=20, autoWidth = FALSE), 
                   class = 'cell-border stripe',

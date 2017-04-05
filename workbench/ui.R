@@ -1,15 +1,16 @@
 dashboardPage(skin = "blue",
               dashboardHeader(title = span("Workbench",img(src="logo_oficial.png", width = 30, height=50, 
-                                                           align = "right")), titleWidth = 220
+                                                           align = "right")), titleWidth = 250
                               ),
               
-              dashboardSidebar(width = 220, 
+              dashboardSidebar(width = 250, 
                                sidebarMenu(id = "sidebarmenu",
                                            menuItem(icon = icon("hand-pointer-o"), "Select", tabName = "select",
                                            selectInput("scriptName", "Script Name", choices = script_names),
                                            #conditionalPanel("input.sidebarmenu === 'profiler'", 
                                                             dateRangeInput("dateId", "Date range"),
                                                             selectInput("scriptId", "Script Id", choices = NULL),
+                                                            selectInput("inputPacient", "Paciente", choices = NULL),
                                                             actionButton("updateButton", "Update", width="60%"),
                                                             tags$style(type='text/css', "#updateButton {
                                                                        margin:auto; margin-bottom: 0.5cm; display:block; }")
