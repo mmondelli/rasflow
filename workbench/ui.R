@@ -110,10 +110,15 @@ dashboardPage(skin = "blue",
                             )
                           ),
                   tabItem(tabName = "domainInfo",
+                          fluidRow(
+                          valueBoxOutput("alignmentRate")
+                          ),
+                          fluidRow(
                           box(
                             title = "VCF File",  
                             collapsible = TRUE, width = NULL, status = "primary",
                             div(style = 'overflow-x: scroll', DT::dataTableOutput('tableDomainVcf'))
+                          )
                           )
                   )
                 )#fim tabItems

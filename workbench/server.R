@@ -113,6 +113,7 @@
   
   #BOXES
   source('modules/profiler/boxes.R', local = TRUE)
+  source('modules/domain/boxes.R', local = TRUE)
   
   #TABLES
   source('modules/profiler/tables.R', local = TRUE)
@@ -134,7 +135,7 @@
   })
   
   output$tableDomainVcf <- renderDataTable({
-    print(data.frame(cmd$data))
+    #inprint(data.frame(cmd$data))
     DT::datatable(data.frame(domain$data[,1:17]), 
                   options = list(pageLength=20, autoWidth = FALSE), 
                   class = 'cell-border stripe',
