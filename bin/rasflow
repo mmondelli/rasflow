@@ -1,0 +1,56 @@
+#!/bin/bash
+
+r=${1}
+g=${2}
+c=${3}
+t=${4}
+csv=${5}
+db=${6}
+
+if [ $# != 6 ]; then
+	echo "***ERROR*** Use: $0 <ref> <gtf> <cores> <option> <csv> <database>"
+	exit -1
+fi
+
+source ../env_loss
+
+SQLITE_CMD="sqlite3 $db"
+runid_db=$(echo "select script_run_id from script_run order by start_time desc limit 1;" | $SQLITE_CMD)
+
+#Workflow execution
+echo -e "\n# Workflow execution $i ------------------------------------------ \n"
+{ time swift loss_all.swift -ref=$r -gtf=$g -op=$t -p=$c -input=$csv; } 2>>time.txt
+runid=$(ls -t | grep run | head -1 ) #| cut -c1-6)
+echo '- Run: ' $runid
+
+#Import provenance (last execution/run dir)
+echo -e "\n# Import provenance --------------------------- \n"
+swiftlog -import-provenance $runid
+
+#Import log
+echo -e "\n# Import log (swift provenance) ----------------------------- \n"
+echo "- Run id: " $runid_db 
+log_extractor $db $runid_db >> domain_extractor.out
+
+#Import vcf file
+echo -e "\n# Import vcf file (domain provenance) -------------------------- \n"
+dir=$(ls -al | grep "^d" | grep GATK | awk '{print $9}';)
+
+for i in $dir
+do
+	echo "- Directory: " $i
+	final=$(ls $i/*FINAL.vcf)
+	echo "- Final vcf: " $final
+	vcf_extractor $db $final >> domain_extractor.out
+done
+
+#Import gff
+echo -e "\n# Import gff file (domain provenance) -------------------------- \n"
+echo "- GFF: " $g
+gff_extractor $db $g $runid_db >> domain_extractor.out
+
+#Import csv
+echo -e "\n# Import input csv (domain provenance) ------------------------- \n"
+echo "- CSV: " $csv
+csv_extractor $db $runid_db $csv >> domain_extractor.out
+
