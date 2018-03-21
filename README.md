@@ -24,11 +24,15 @@ To execute the workflow it is necessary that:
 
 The workflow can be executed using the following command:
 
-$ swift loss_all.swift -ref=<reference> -gtf=<gff or gtf file> -op=<1-samtools or 2-GATK> -p=<number of cores> -input=input.csv; 
+```
+swift loss_all.swift -ref=<reference> -gtf=<gff or gtf file> -op=<1-samtools or 2-GATK> -p=<number of cores> -input=input.csv; 
+```
 
 Instead, if you want to run the workflow and import the provenance automatically, you can run:
 
-$ rasflow <reference> <gtf> <number of cores> <option (1- samtools or 2-GATK)> <input.csv> <provenance database (e.: ./swift_provenance.db)>
+```
+rasflow <reference> <gtf> <number of cores> <option (1- samtools or 2-GATK)> <input.csv> <provenance database (e.: ./swift_provenance.db)>
+```
 
 Note that the workflow aims to analyze the sequences in parallel. Thus, the number of processes defined with the -p parameter will be replicated for each sequence analysis.
 
