@@ -36,7 +36,7 @@ rasflow <reference> <gtf> <number of cores> <option (1-samtools or 2-GATK)> <inp
 
 Note that the workflow aims to analyze the sequences in parallel. Thus, the number of processes defined with the -p parameter will be replicated for each sequence analysis.
 
-Also, the GATK and Samtools applications used in the workflow and other scripts (e.g., for the collection of domain provenance) are placed in the /bin directory of this repository. It is necessary to export them to the system PATH so that Swift can recognize:
+Also, the GATK and Samtools applications used in the workflow and other scripts (e.g., for the collection of domain provenance) are placed in the /bin directory of this repository. It is necessary to add them to the system PATH so that Swift can recognize:
 
 ```
 export PATH=<path to /bin>:$PATH
