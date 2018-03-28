@@ -7,4 +7,4 @@ html=$4
 out=$5
  
 
-java -jar -Xmx2g ${SWIFT_LOSS}/snpEff.jar eff $dir $vfc $op -no-downstream -no-upstream -s $html > $out 
+java -jar -Xmx2g ${RASFLOW}/bin/snpEff.jar eff $dir $vfc $op -no-downstream -no-upstream -s $html > $out 

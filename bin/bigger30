@@ -1,4 +1,4 @@
 #!/bin/bash
 
-python ${SWIFT_LOSS}/bigger30.py -l $1
+python ${RASFLOW}/bin/bigger30.py -l $1
 

@@ -3,6 +3,8 @@
 bcf=$1
 vcf=$2
 
-bcftools view -e -g -c -v -N $bcf | perl ${SWIFT_LOSS}/vcfutils.pl varFilter -d 20 > $vcf
+bcftools view -e -g -c -v -N $bcf | perl ${RASFLOW}/bin/vcfutils.pl varFilter -d 20 > $vcf
+
+#bcftools view -e -g -c -v -N $bcf | perl ${SWIFT_LOSS}/vcfutils.pl varFilter -d 20 > $vcf
 
 #bcftools view -e -g -c -v -N $bcf | perl vcfutils.pl varFilter -d 20 > $vcf

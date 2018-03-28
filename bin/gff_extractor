@@ -13,7 +13,7 @@ echo $final
 
 #GFF
 grep 'ID=' $gff | grep 'Name=' > id_name.gff
-python $SWIFT_LOSS/gtf2csv/gtf_to_csv.py -i id_name.gff -o genes.csv
+python ${RASFLOW}/bin/gtf2csv/gtf_to_csv.py -i id_name.gff -o genes.csv
 
 echo "# Creating temp table and importing GFF data" 
 echo -e "create table temp(id,name,parent,biotype,ccdsid,description,end,feature,frame,gene_id,havana_gene,havana_transcript,havana_version,logic_name,score,seqname,source,start,strand,tag,transcript_id,transcript_support_level,version); \n.mode csv \n.separator ',' \n.header off \n.import genes.csv temp" | $SQLITE_CMD

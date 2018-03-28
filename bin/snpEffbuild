@@ -8,6 +8,6 @@ conf=$3
 
 #echo $dir".genome: " $spec >> $config
 
-java -jar -Xmx4g ${SWIFT_LOSS}/snpEff.jar build -$1 -c $2 $3 
+java -jar -Xmx4g ${RASFLOW}/bin/snpEff.jar build -$1 -c $2 $3 
 
 

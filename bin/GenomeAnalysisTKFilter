@@ -1,5 +1,5 @@
 #!/bin/bash
 
-java -jar ${SWIFT_LOSS}/GenomeAnalysisTK.jar -T VariantFiltration -R $1 -V $2 --filterExpression "QD < 2.0 || FS > 60.0 || MQ <= $4  || DP <= $5 || QUAL >= 1500 || QUAL <= $6 || ReadPosRankSum < -8.0"  --filterName snp_filter -o $3 
+java -jar ${RASFLOW}/bin/GenomeAnalysisTK.jar -T VariantFiltration -R $1 -V $2 --filterExpression "QD < 2.0 || FS > 60.0 || MQ <= $4  || DP <= $5 || QUAL >= 1500 || QUAL <= $6 || ReadPosRankSum < -8.0"  --filterName snp_filter -o $3 
 
 #java -jar GenomeAnalysisTK.jar -T VariantFiltration -R hg38.fasta -V LNCC_S1_all_R1_001.fastq.raw.vcf --filterExpression QD < 2.0 || FS > 60.0 || MQ <= 40.0 || DP <= 30 || QUAL >= 1500 || QUAL <= 500 || ReadPosRankSum < -8.0 --filterName snp_filter -o LNCC_S1_all_R1_001.fastq.filtered1.vcf

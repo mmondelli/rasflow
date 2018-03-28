@@ -13,4 +13,4 @@ echo $html
 echo $out
 echo $op
 
-java -jar -Xmx2g ${SWIFT_LOSS}/snpEff.jar eff $1 -c $6 $2 -$5 -no-downstream -no-upstream -s $3 > $4
+java -jar -Xmx2g ${RASFLOW}/bin/snpEff.jar eff $1 -c $6 $2 -$5 -no-downstream -no-upstream -s $3 > $4

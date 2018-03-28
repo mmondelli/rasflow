@@ -3,4 +3,4 @@
 ref=$1
 out=$2
 
-java -jar ${SWIFT_LOSS}/CreateSequenceDictionary.jar R=$ref O=$out
+java -jar ${RASFLOW}/bin/CreateSequenceDictionary.jar R=$ref O=$out
