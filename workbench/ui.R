@@ -10,7 +10,7 @@ dashboardPage(skin = "blue",
                                            #conditionalPanel("input.sidebarmenu === 'profiler'", 
                                                             dateRangeInput("dateId", "Date range"),
                                                             selectInput("scriptId", "Script Id", choices = NULL),
-                                                            selectInput("inputPacient", "Paciente", choices = NULL),
+                                                            selectInput("inputPacient", "Patient", choices = NULL),
                                                             actionButton("updateButton", "Update", width="60%"),
                                                             tags$style(type='text/css', "#updateButton {
                                                                        margin:auto; margin-bottom: 0.5cm; display:block; }")
@@ -50,7 +50,7 @@ dashboardPage(skin = "blue",
                             
                             tabBox(
                               title = "Summary",
-                              id = "tabsetSummary", width = 12,
+                              id = "tabsetSummary", width = 12, 
                               tabPanel("Table", formattableOutput("tableQuery")),
                               tabPanel("Summary", verbatimTextOutput("summaryPlot"))
                             ),#fim tabbox

@@ -16,6 +16,7 @@ run_id=$(echo "select script_run_id from script_run order by start_time desc lim
 # varType
 java -jar SnpSift.jar 2>out
 snpsift=$(grep -i "version" out | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
+echo $snipsift
 # AddReplace
 java -jar AddOrReplaceReadGroups.jar 2> out
 add=$(grep -i "version" out | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
@@ -29,13 +30,13 @@ dict=$(grep -i "version" out | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
 # GATK
 gatk=$(java -jar GenomeAnalysisTK.jar --version)
 # MarkDuplicates
-java -jar MarkDuplicates.jar --version
+java -jar MarkDuplicates.jar --version 2>out
 mark=$(cat out)
 # Samtools
-samtools 2> out
+samtools 2>out
 samtools=$(grep -i "version" out | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
 # Tabix
-tabix 2> out
+tabix 2>out
 tabix=$(grep -i "version" out | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
 
 # Get id (each app)
