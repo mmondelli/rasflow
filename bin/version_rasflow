@@ -1,0 +1,54 @@
+#!/bin/bash
+
+db=$1
+
+if [ $# != 1 ]; then
+	echo "***ERROR*** Use: $0 database"
+	exit -1
+fi
+
+SQLITE_CMD="sqlite3 $db"
+
+run_id=$(echo "select script_run_id from script_run order by start_time desc limit 1;" | $SQLITE_CMD)
+
+# SnpSift
+# extractFields
+# varType
+java -jar SnpSift.jar 2>out
+snpsift=$(grep -i "version" out | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
+# AddReplace
+java -jar AddOrReplaceReadGroups.jar 2> out
+add=$(grep -i "version" out | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
+# Bcftools
+bcftools=$(bcftools 2>out | cat out | grep -i "Version" | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
+# Bowtie
+bowtie=$(bowtie2 --version | grep -i -m 1 "version" | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
+# CreateDictionary
+java -jar CreateSequenceDictionary.jar 2> out
+dict=$(grep -i "version" out | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
+# GATK
+gatk=$(java -jar GenomeAnalysisTK.jar --version)
+# MarkDuplicates
+java -jar MarkDuplicates.jar --version
+mark=$(cat out)
+# Samtools
+samtools 2> out
+samtools=$(grep -i "version" out | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
+# Tabix
+tabix 2> out
+tabix=$(grep -i "version" out | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
+
+# Get id (each app)
+snpsift_id=$(echo "select app_exec_id from app_exec where app_name like '%extract%' and script_run_id like '%$run_id%' limit 1;" | $SQLITE_CMD)
+add_id=$(echo "select app_exec_id from app_exec where app_name like '%add%' and script_run_id like '%$run_id%' limit 1;" | $SQLITE_CMD)
+bcftools_id=$(echo "select app_exec_id from app_exec where app_name like '%bcf%' and script_run_id like '%$run_id%' limit 1;" | $SQLITE_CMD)
+bowtie_id=$(echo "select app_exec_id from app_exec where app_name like '%bowtie%' and script_run_id like '%$run_id%' limit 1;" | $SQLITE_CMD)
+dict_id=$(echo "select app_exec_id from app_exec where app_name like '%create%' and script_run_id like '%$run_id%' limit 1;" | $SQLITE_CMD)
+gatk_id=$(echo "select app_exec_id from app_exec where app_name like '%tk%' and script_run_id like '%$run_id%' limit 1;" | $SQLITE_CMD)
+mark_id=$(echo "select app_exec_id from app_exec where app_name like '%mark%' and script_run_id like '%$run_id%' limit 1;" | $SQLITE_CMD)
+samtools_id=$(echo "select app_exec_id from app_exec where app_name like '%samtools%' and script_run_id like '%$run_id%' limit 1;" | $SQLITE_CMD)
+tabix_id=$(echo "select app_exec_id from app_exec where app_name like '%tabix%' and script_run_id like '%$run_id%' limit 1;" | $SQLITE_CMD)
+
+# Insert app_annot_text
+echo "insert into app_exec_annot_text values ('$snpsift_id', 'version', '$snpsift'), ('$add_id', 'version', '$add'), ('$bcftools_id', 'version', '$bcftools'),('$bowtie_id', 'version', '$bowtie'), ('$dict_id', 'version', '$dict'), ('$gatk_id', 'version', '$gatk'), ('$mark_id', 'version', '$mark'), ('$samtools_id', 'version', '$samtools'), ('$tabix_id', 'version', '$tabix');" | $SQLITE_CMD
+
