@@ -10,14 +10,14 @@ dashboardPage(skin = "blue",
                                            #conditionalPanel("input.sidebarmenu === 'profiler'", 
                                                             dateRangeInput("dateId", "Date range"),
                                                             selectInput("scriptId", "Script Id", choices = NULL),
-                                                            selectInput("inputPacient", "Patient", choices = NULL),
+                                                            selectInput("inputPacient", "Patient (RASflow only)", choices = NULL),
                                                             actionButton("updateButton", "Update", width="60%"),
                                                             tags$style(type='text/css', "#updateButton {
                                                                        margin:auto; margin-bottom: 0.5cm; display:block; }")
                                            ),
                                            menuItem(icon = icon("bar-chart"), "Profiler", tabName = "profiler"),
                                            menuItem(icon = icon("spinner"), "Execution overview", tabName = "executionOverview"),
-                                           menuItem(icon = icon("search"), "Domain info", tabName = "domainInfo"),
+                                           menuItem(icon = icon("search"), "Domain info (RASflow only)", tabName = "domainInfo"),
                                            
                                            # menuItem("Download",
                                            #          radioButtons(inputId = "downloadFormatt", label = "Choose a type: ",

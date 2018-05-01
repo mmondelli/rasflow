@@ -7,7 +7,7 @@ output$plotDuration <- renderPlot({
           las=2, 
           beside=TRUE, 
           col=colours, 
-          ylim=range(0, max(df$avg_duration)+100),
+          ylim=range(0, max(df$avg_duration)+mean(df$avg_duration)),
           ylab="Avg Duration Time (min)", xlab="Apps", 
           cex.names=1, 
           border=NA, 
@@ -24,7 +24,7 @@ output$plotCpu <- renderPlot({
             log="y", 
             beside=TRUE, 
             col=colours, 
-            ylim=c(1, max(df$avg_percent_cpu)),
+            ylim=c(1, max(df$avg_percent_cpu)+1000),
             ylab="Avg CPU Usage (log)", xlab="Apps", 
             cex.names=1, 
             border=NA, 
@@ -123,9 +123,14 @@ output$plotReadWritten <- renderPlot({
           legend = c("read", "write"),
           las=2,
           beside=TRUE, 
-          ylim=c(0,max(subset)),
+          ylim=c(0,max(subset)+mean(subset)),
           col=c(colours[5:6]), 
-          ylab = "", xlab="Apps", border = NA)
+          xlab="Apps", 
+          border = NA,
+          args.legend=list(
+            x=6,
+            bty = "n"
+          ))
   mtext("Data (Mb)", side=2, line=5)
 })
 
