@@ -13,23 +13,22 @@ type input {
         file libR;
 }
 
-#Parâmetros Gerais
+#Parameters
 int op = toInt(arg("op","1"));
 int t = toInt(arg("p","10"));
 string b30op = arg("b30","n");
 string ploidy = arg("ploidy", "2");
 string spec = arg("s", "human");
-
 file ref <single_file_mapper;file=arg("ref")>;
 input seqInput[] <csv_mapper;file="input.csv">;
 file gtf <single_file_mapper;file=arg("gtf")>;
 
-#Parâmetros GATK
+#GATK Parameters
 string MQ = arg("mq","40.0");
 string DP = arg("dp","30.0");
 string QUAL = arg("qual","500");
 
-#Parâmetros SAMTOOLS
+#Samtools parameters
 int D = toInt(arg("d","250"));
 int L = toInt(arg("l","250"));
 int Q = toInt(arg("q","13"));
@@ -68,6 +67,8 @@ foreach l,k in seqInput
 
 	string libFname;
 	string libRname;
+
+	# File declarations
 
 	file sam <single_file_mapper;file=strcat(libFname, ".sam")>;
 	file log <single_file_mapper;file=strcat(libFname, "_", strcut(filename(ref), "([^/ ]*).fasta"), ".log")>;
@@ -128,7 +129,7 @@ foreach l,k in seqInput
 	file finalF;
 	file finalR;
 
-	#Tipo de reads (illumina ou ion)
+	#Reads type (illumina or ion)
 	if (b30op == "y")
 	{
 		tracef("%s\n", "IonTorrent - retrieving >= 30mer");
@@ -178,6 +179,8 @@ foreach l,k in seqInput
 
 	}
 
+	# Workflow apps 
+
 	if (length(bt2) > 0)
 	{
 		tracef("%s\n", "Indexed.");
@@ -199,6 +202,7 @@ foreach l,k in seqInput
 	(gtf_genes) = cp(gtf);
 	(seq) = cp(ref);
 
+	# GATK (1) or Samtools (2)
 	switch (op)
 	{
 	case 1:
@@ -235,7 +239,7 @@ foreach l,k in seqInput
 		tracef("%s\n", "Invalid option.");
 	}
 		
-	#Check extensão do arquivo gtf para executar build com opção correta
+	#Check file extension (gtf) to execute snpBuild with the right option
 	string genes_extension = strcut(filename(gtf), "(\\.[^.]+)$");
 	trace(genes_extension);	
 	if (genes_extension == ".gff")
@@ -246,7 +250,7 @@ foreach l,k in seqInput
 		(bin) = snpBuild(conf, dir, gtf_genes, seq, "gtf22");
 	}
 
-	#Se for humano, executa os 3 snpEff
+	#If 'human' execute 3 snpEff
 	if (spec == "human")
 	{
 		(annotatedVcf[0],annotatedHtml[0]) = snpEff(seq, mvVcf, conf, dir, bin, "snp");
@@ -260,7 +264,7 @@ foreach l,k in seqInput
 		(annotatedVcf[0],annotatedHtml[0]) = snpEff(seq, mvVcf, conf, dir, bin, "snp");
 	}
 
-	#Proveniência
+	# Provenance
 	file compressedVcf[];
 	file indexedVcf[];
 
