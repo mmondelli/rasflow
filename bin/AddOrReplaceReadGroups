@@ -4,5 +4,5 @@ q30bam=$1
 out=$2
 lib=$3
 
-java -jar ${SWIFT_LOSS}/AddOrReplaceReadGroups.jar INPUT=$q30bam OUTPUT=$out RGID=1 RGLB=A RGPL=IONTORRENT RGPU=NA RGSM=$lib
+java -jar ${RASFLOW}/bin/AddOrReplaceReadGroups.jar INPUT=$q30bam OUTPUT=$out RGID=1 RGLB=A RGPL=IONTORRENT RGPU=NA RGSM=$lib
 
