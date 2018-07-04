@@ -42,4 +42,6 @@ Also, the GATK and Samtools applications used in the workflow and other scripts 
 export PATH=<path to /bin>:$PATH
 ```
 
+A sample of input data for RASflow can be downloaded [here](https://zenodo.org/record/1304274).
+
 
